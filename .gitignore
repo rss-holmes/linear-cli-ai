@@ -1,0 +1,7 @@
+.venv/
+*.egg-info
+__pycache__/
+.env
+.aws/
+.DS_Store
+.vscode/
