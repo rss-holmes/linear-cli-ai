@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import typer
 from PyInquirer import Separator, prompt
 from rich import print as rprint
@@ -11,7 +10,6 @@ from linear import (
     get_user_list,
 )
 
-load_dotenv()
 app = typer.Typer()
 
 
@@ -99,7 +97,7 @@ def sample_func(name: str):
 
 
 @app.command("create-issue")
-def create_issue():
+def create_issue_interface():
     rprint("[yellow]Provide the following details : [yellow]")
 
     team_list = get_team_list()

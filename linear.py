@@ -238,9 +238,7 @@ def create_issue(
     """
     Function to create an issue on linear
     """
-
-    print(title, description, team_id, project_id, assignee_id, label_ids)
-
+    
     query = f"""
     mutation IssueCreate {{
     issueCreate(
