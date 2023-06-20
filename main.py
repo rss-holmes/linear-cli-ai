@@ -1,22 +1,18 @@
-import subprocess
-
+from dotenv import load_dotenv
 import typer
-from PyInquirer import Separator, print_json, prompt, style_from_dict
+from PyInquirer import Separator, prompt
 from rich import print as rprint
 
-from linear import create_issue, get_project_list, get_team_list, get_user_list, get_label_list
+from linear import (
+    create_issue,
+    get_label_list,
+    get_project_list,
+    get_team_list,
+    get_user_list,
+)
 
+load_dotenv()
 app = typer.Typer()
-
-# custom_style_2 = style_from_dict({
-#     "separator": '#6C6C6C',
-#     "questionmark": '#FF9D00 bold',
-#     "selected": '#5F819D',
-#     "pointer": '#FF9D00 bold',
-#     "instruction": '',  # default
-#     "answer": '#5F819D bold',
-#     "question": '',
-# })
 
 
 @app.command("hello")
@@ -103,10 +99,8 @@ def sample_func(name: str):
 
 
 @app.command("create-issue")
-def sample_func():
+def create_issue():
     rprint("[yellow]Provide the following details : [yellow]")
-
-    # title: str, description: str, team_id: str, project_id: str, assignee_id: str
 
     team_list = get_team_list()
     user_list = get_user_list()
@@ -165,7 +159,9 @@ def sample_func():
     rprint(f"[green bold]Team :[green bold] {team_list[team_id]['name'] }")
     rprint(f"[green bold]Assignee :[green bold] {user_list[assignee_id]['name'] }")
     rprint(f"[green bold]Project :[green bold] {project_list[project_id]['name'] }")
-    rprint(f"[green bold]Labels :[green bold] {[label_list[label]['name'] for label in labels]}")
+    rprint(
+        f"[green bold]Labels :[green bold] {[label_list[label]['name'] for label in labels]}"
+    )
 
     issue_confirmation_list = [
         {
@@ -185,12 +181,14 @@ def sample_func():
             team_list[team_id]["id"],
             project_list[project_id]["id"],
             user_list[assignee_id]["id"],
-            [label_list[label]['id'] for label in labels],
+            [label_list[label]["id"] for label in labels],
         )
         if issue_created:
             rprint("[green bold]Issue created successfully [green bold]")
         else:
             rprint("[red bold]Error while creating the issue [red bold]")
+    else:
+        rprint("[red bold]Issue creation cancelled. [red bold]")
 
 
 if __name__ == "__main__":

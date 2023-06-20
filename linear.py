@@ -1,10 +1,12 @@
 import json
-
+import os
 import requests
+from dotenv import load_dotenv
 
-LINEAR_GRAPHQL_ENDPOINT = "https://api.linear.app/graphql"
-LINEAR_HEADER_AUTH = "lin_api_Td9dCCWAhYTvNkvQVhGINXkJvFUf5svccWE881oK"
+load_dotenv()
 
+LINEAR_GRAPHQL_ENDPOINT = os.getenv('LINEAR_GRAPHQL_ENDPOINT')
+LINEAR_HEADER_AUTH = os.getenv('LINEAR_HEADER_AUTH')
 
 def make_linear_call(query: str) -> dict or None:
     """
@@ -20,7 +22,7 @@ def make_linear_call(query: str) -> dict or None:
         response_json = json.loads(response.text)
         return response_json
     else:
-        print(response)
+        print(response.json())
         return None
 
 
