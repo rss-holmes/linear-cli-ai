@@ -2,7 +2,7 @@ import typer
 from PyInquirer import Separator, prompt
 from rich import print as rprint
 
-from linear import (
+from src.linear import (
     create_issue,
     get_label_list,
     get_project_list,

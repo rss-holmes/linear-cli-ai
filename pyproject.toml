@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "linear-cli"
+name = "linear-cli-ai"
 version = "0.1.0"
-description = ""
+description = "A simple cli for interacting with linear"
 authors = ["scar3crow <rss.holmes@gmail.com>"]
 readme = "README.md"
-packages = [{include = "linear_cli"}]
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "3.8.10"

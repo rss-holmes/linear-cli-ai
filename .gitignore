@@ -5,3 +5,4 @@ __pycache__/
 .aws/
 .DS_Store
 .vscode/
+dist/
