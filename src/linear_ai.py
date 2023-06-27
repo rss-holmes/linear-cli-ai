@@ -4,12 +4,18 @@ from linear import make_linear_call
 def create_issue_ai(
     title: str,
     description: str,
-    project_name: str,
-    assignee_name: str,
-    labels,
+    project_name: str ="",
+    assignee_name: str = "",
+    labels=list(),
     team_name: str = "",
 ):
-    print("Validating the renewed inputs")
+    print("Validating the inputs")
+    # print(f"The title is {title}")
+    # print(f"The description is {description}")
+    # print(f"The team is {team_name}")
+    # print(f"The project is {project_name}")
+    # print(f"The assignee is {assignee_name}")
+    # print(f"The labels are {labels}")
 
     if not title:
         raise ValueError("Title cannot be empty")
@@ -17,18 +23,22 @@ def create_issue_ai(
     if not description:
         raise ValueError("Title cannot be empty")
 
+    team_object = []
     if team_name:
         team_object = check_and_extract_team(team_name)
         print(team_object)
 
+    project_object = []
     if project_name:
         project_object = check_and_extract_project(project_name)
         print(project_object)
 
+    assignee_object = []
     if assignee_name:
         assignee_object = check_and_extract_assignee(assignee_name)
         print(assignee_object)
 
+    label_objects = []
     if labels:
         label_objects = check_and_extract_labels(labels)
         print(label_objects)
@@ -39,6 +49,8 @@ def create_issue_ai(
 def create_issue_with_valid_inputs(
     title, description, team_object, project_object, assignee_object, label_objects
 ):
+    print("Creating issue with the given inputs \n")
+
     print(f"The title is {title}")
     print(f"The description is {description}")
     print(f"The team is {team_object}")
@@ -169,7 +181,7 @@ def check_and_extract_label(label):
     if response:
         label_list = response["data"]["issueLabels"]["nodes"]
         if len(label_list) == 0:
-            raise ValueError(f"No labels found with the name {label}")
+            raise ValueError(f"Label name {label} is invalid")
         return label_list
 
     return None

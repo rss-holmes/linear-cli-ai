@@ -15,32 +15,18 @@ functions = [
                 },
                 "team_name": {
                     "type": "string",
-                    "enum": ["engineering", "qa", "design", "data", "product"],
-                    "description": "The team for which this issue is created.",
+                    "description": "The team for which this issue is to be created.",
                 },
                 "project_name": {
                     "type": "string",
-                    "enum": [
-                        "typeahead revamp",
-                        "nlv revamp v1",
-                        "nlv revamp v2",
-                        "gmail integration",
-                    ],
-                    "description": "The project for which this issue is created.",
+                    "description": "The project for which this issue is to be created.",
                 },
                 "assignee_name": {
                     "type": "string",
-                    "enum": ["rohan", "sharad", "ajwad", "sagar"],
-                    "description": "The user who is assigned this issue.",
+                    "description": "The user who is to be assigned this issue.",
                 },
                 "labels": {
                     "type": "array",
-                    "enum": [
-                        "IA-Retention",
-                        "IA-Monetization",
-                        "IA-Activation",
-                        "IA-Referral",
-                    ],
                     "description": "An array of labels for this issue.",
                     "items": {"type": "string"},
                 },
