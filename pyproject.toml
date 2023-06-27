@@ -14,6 +14,7 @@ rich = "^13.4.2"
 requests = "^2.31.0"
 textual = {extras = ["dev"], version = "^0.28.0"}
 python-dotenv = "^1.0.0"
+openai = "^0.27.8"
 
 [build-system]
 requires = ["poetry-core"]
