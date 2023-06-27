@@ -1,14 +1,16 @@
 import json
 import os
 import requests
+from requests.exceptions import ConnectTimeout, HTTPError, ReadTimeout, Timeout, ConnectionError
 from dotenv import load_dotenv
+from typing import Dict, List
 
 load_dotenv()
 
-LINEAR_GRAPHQL_ENDPOINT = os.getenv('LINEAR_GRAPHQL_ENDPOINT')
-LINEAR_HEADER_AUTH = os.getenv('LINEAR_HEADER_AUTH')
+LINEAR_GRAPHQL_ENDPOINT = os.getenv('LINEAR_GRAPHQL_ENDPOINT') or ''
+LINEAR_HEADER_AUTH = os.getenv('LINEAR_HEADER_AUTH') or ''
 
-def make_linear_call(query: str) -> dict or None:
+def make_linear_call(query: str) -> Dict[str,Dict[str, Dict[str, List[Dict[str, str]]]]]:
     """
     Function to make a call to linear
     """
@@ -18,12 +20,13 @@ def make_linear_call(query: str) -> dict or None:
         json={"query": query},
         headers={"Authorization": LINEAR_HEADER_AUTH},
     )
-    if response.status_code == 200:
-        response_json = json.loads(response.text)
-        return response_json
-    else:
-        print(response.json())
-        return None
+
+    if response.status_code != 200:
+        raise HTTPError(
+            f"Linear API returned status code {response.status_code} with message {response.text}"
+        )
+
+    return response.json()
 
 
 def get_team_list() -> list or None:
@@ -266,5 +269,3 @@ def create_issue(
         return True
     else:
         return False
-
-
