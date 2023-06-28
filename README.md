@@ -46,7 +46,7 @@ You can do this in several ways:
 The quickest way to get started is to run the ``linear-cli-ai configure`` command:
 
 ```
-$ linear-cli-ai configure
+$ linear configure
   Provide the following details : 
    Linear API Token : MY_LINEAR_TOKEN
    OpenAI API Key : MY_OPENAI_KEY
@@ -76,27 +76,28 @@ To use a config file, create an INI formatted file like this:
   model = <gpt_model>
 
 ```
-and place it in ``~/.linear-cli-ai.ini`` (or in ``%UserProfile%\.linear-cli-ai.ini``
-on Windows).
+and place it in ``~/.linear-cli-ai.ini`` (or in ``%UserProfile%\.linear-cli-ai.ini`` on Windows).
 
 # Sample Usage
+
+linear-cli-api is available in the commandline with the command ``linear``
 
 To view help documentation type :
 
 ```
-$ linear-cli-ai help
+$ linear help
 ```
 
 To use ai to perform actions on linear:
 
 ```
-$ linear-cli-ai ai
+$ linear ai
 ```
 
 To create an issue via options on linear :
 
 ```
-$ linear-cli-ai create-issue
+$ linear create-issue
 ```
 ### Sample ai prompt for creating an issue on linear
 Create an issue with description 'Rewrite the print service with queue system'
