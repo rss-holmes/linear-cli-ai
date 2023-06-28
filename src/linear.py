@@ -1,15 +1,9 @@
 import json
-import os
 from typing import Dict, List, Union
 
 import requests
-from dotenv import load_dotenv
 from requests.exceptions import HTTPError
-
-load_dotenv()
-
-LINEAR_GRAPHQL_ENDPOINT = os.getenv("LINEAR_GRAPHQL_ENDPOINT") or ""
-LINEAR_HEADER_AUTH = os.getenv("LINEAR_HEADER_AUTH") or ""
+from constants import LINEAR_GRAPHQL_ENDPOINT, LINEAR_TOKEN
 
 
 def make_linear_call(
@@ -22,7 +16,7 @@ def make_linear_call(
     response = requests.post(
         LINEAR_GRAPHQL_ENDPOINT,
         json={"query": query},
-        headers={"Authorization": LINEAR_HEADER_AUTH},
+        headers={"Authorization": LINEAR_TOKEN},
     )
 
     if response.status_code != 200:

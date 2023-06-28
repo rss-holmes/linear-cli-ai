@@ -1,15 +1,7 @@
-import os
 from typing import Any, Dict, List
-
 import requests
-from dotenv import load_dotenv
-
 from function_schema import functions
-
-load_dotenv()
-
-GPT_MODEL = os.getenv("GPT_MODEL") or ""
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or ""
+from constants import GPT_MODEL, OPENAI_API_KEY
 
 def chat_completion_request(
     messages: List[Dict["str", "str"]],

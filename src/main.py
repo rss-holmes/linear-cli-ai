@@ -1,11 +1,12 @@
-import typer
-# from PyInquirer import Separator, prompt
-from rich import print as rprint
-from typing import Dict, List
 import json
-from gpt import ask_question, setup_ai_system
-from linear_ai import create_issue_ai, get_team_list_ai
+from typing import Dict, List, cast
 
+import typer
+from PyInquirer import prompt  # type: ignore
+from rich import print as rprint
+
+from configure import configure_system
+from gpt import ask_question, setup_ai_system
 from linear import (
     create_issue,
     get_label_list,
@@ -13,8 +14,51 @@ from linear import (
     get_team_list,
     get_user_list,
 )
+from linear_ai import create_issue_ai, get_team_list_ai
 
 app = typer.Typer()
+
+
+@app.command("configure")
+def configure():
+    gpt_models_list = [
+        {
+            "name": "gpt-3.5-turbo-0613",
+        },
+        {
+            "name": "gpt4",
+        },
+    ]
+
+    rprint("[yellow]Provide the following details : [yellow]")
+
+    config_input_list: List[Dict[str, str]] = [
+        {
+            "type": "input",
+            "name": "linear_api_token",
+            "message": "Linear API Token : ",
+        },
+        {
+            "type": "input",
+            "name": "openai_api_key",
+            "message": "OpenAI API Key : ",
+        },
+        {
+            "type": "list",
+            "name": "gpt_model",
+            "message": "Select the model you will use : ",
+            "choices": gpt_models_list,
+        },
+    ]
+
+    config_data = cast(Dict[str, str], prompt(config_input_list))
+
+    linear_api_token: str = config_data["linear_api_token"]
+    openai_api_key: str = config_data["openai_api_key"]
+    gpt_model: str = config_data["gpt_model"]
+
+    configure_system(linear_api_token, openai_api_key, gpt_model)
+
 
 @app.command("create-issue")
 def create_issue_interface():
@@ -107,6 +151,7 @@ def create_issue_interface():
             rprint("[red bold]Error while creating the issue [red bold]")
     else:
         rprint("[red bold]Issue creation cancelled. [red bold]")
+
 
 @app.command("create-issue-ai")
 def create_issue_ai_interface():
