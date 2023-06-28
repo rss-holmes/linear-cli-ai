@@ -153,7 +153,7 @@ def create_issue_interface():
         rprint("[red bold]Issue creation cancelled. [red bold]")
 
 
-@app.command("create-issue-ai")
+@app.command("ai")
 def create_issue_ai_interface():
     running = 1
     message_history: List[Dict[str, str]] = []
