@@ -16,90 +16,6 @@ from linear import (
 
 app = typer.Typer()
 
-
-@app.command("hello")
-def sample_func(name: str):
-    rprint("[red bold]Hello[/red bold] [yellow]World[yello]")
-    module_list_question = [
-        {
-            "type": "list",
-            "name": "username",
-            "message": "Select any one username: ",
-            "choices": [
-                {
-                    "name": "Eddie",
-                },
-                {
-                    "name": "Hughie",
-                },
-                {
-                    "name": "Matthew ",
-                },
-                {
-                    "name": "Harvey ",
-                },
-            ],
-        },
-        {
-            "type": "list",
-            "name": "team",
-            "message": "Select any one team: ",
-            "choices": [
-                {
-                    "name": "Engineering",
-                },
-                {
-                    "name": "QA",
-                },
-                {
-                    "name": "Product ",
-                },
-            ],
-        },
-        {
-            "type": "input",
-            "name": "commit_name",
-            "message": "Give a commit name: ",
-        },
-        {
-            "type": "checkbox",
-            "name": "languages",
-            "message": "Select the languages: ",
-            "choices": [
-                {
-                    "name": "Python",
-                },
-                {
-                    "name": "Javascript",
-                },
-                {
-                    "name": "Go ",
-                },
-            ],
-        },
-        {
-            "type": "password",
-            "name": "password",
-            "message": "Give the password for the operation : ",
-        },
-        {
-            "type": "confirm",
-            "name": "confirmation",
-            "message": "Confirm all info is fine : ",
-        },
-    ]
-
-    username = prompt(module_list_question)
-
-    rprint("[yellow]=============================================[yellow]")
-    rprint("[green bold]Enter folder name :[green bold]")
-    folder_name = input()
-
-    print(f"The username is {username['username']}")
-    print(f"The team is {username['team']}")
-    print(f"The folder name is {folder_name}")
-
-
 @app.command("create-issue")
 def create_issue_interface():
     rprint("[yellow]Provide the following details : [yellow]")
@@ -220,7 +136,7 @@ def create_issue_ai_interface():
                 user_message = f"Use '{input_message}' to correct the previous error and create the issue"
         except Exception as e:
             print("There was an error while calling function")
-            # print(e)
+            print(e)
             user_message = (
                 f"""Encountered an error during creating issue. Error is {e}"""
             )

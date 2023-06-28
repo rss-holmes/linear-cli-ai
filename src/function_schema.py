@@ -31,7 +31,7 @@ functions = [
                     "items": {"type": "string"},
                 },
             },
-            "required": ["title", "description"],
+            "required": ["title", "description", "team_name"],
         },
     },
 ]

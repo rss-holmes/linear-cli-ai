@@ -1,9 +1,11 @@
-from typing import Dict, List
+from typing import List, Set
+
 from linear import (
     check_and_extract_assignee,
     check_and_extract_labels,
     check_and_extract_project,
     check_and_extract_team,
+    create_issue,
 )
 
 
@@ -22,48 +24,54 @@ def create_issue_ai(
     if not description:
         raise ValueError("Title cannot be empty")
 
+    if not team_name:
+        raise ValueError("Team Name cannot be empty")
+
     team_object = []
+    team_id: str = ""
     if team_name:
         team_object = check_and_extract_team(team_name)
         print(team_object)
+        team_id = team_object[0]["id"]
 
     project_object = []
+    project_id: str = ""
     if project_name:
         project_object = check_and_extract_project(project_name)
         print(project_object)
+        project_id = project_object[0]["id"]
 
+    assignee_id: str = ""
     assignee_object = []
     if assignee_name:
         assignee_object = check_and_extract_assignee(assignee_name)
         print(assignee_object)
+        assignee_id = assignee_object[0]["id"]
 
     label_objects = []
+    label_ids: Set[str] = set()
     if labels:
         label_objects = check_and_extract_labels(labels)
         print(label_objects)
+        label_ids: Set[str] = set()
+        for label_lists in label_objects:
+            for label in label_lists:
+                label_ids.add(label["id"])
 
-    create_issue_with_valid_inputs(
-        title, description, team_object, project_object, assignee_object, label_objects
+    print(
+        f"""Creating issue with the given inputs: \n
+        Title : {title}\n 
+        Description : {description}\n 
+        Team : {team_object}\n 
+        Project : {project_object}\n 
+        Assignee : {assignee_object}\n 
+        Labels : {label_objects}\n"""
     )
 
+    create_issue(title, description, team_id, project_id, assignee_id, list(label_ids))
 
-def create_issue_with_valid_inputs(
-    title: str,
-    description: str,
-    team_object: List[Dict[str, str]],
-    project_object: List[Dict[str, str]],
-    assignee_object: List[Dict[str, str]],
-    label_objects: List[List[Dict[str, str]]],
+
+def get_team_list_ai(
+    team_name: str = "",
 ):
-    print("Creating issue with the given inputs \n")
-
-    print(f"The title is {title}")
-    print(f"The description is {description}")
-    print(f"The team is {team_object}")
-    print(f"The project is {project_object}")
-    print(f"The assignee is {assignee_object}")
-    print(f"The labels are {label_objects}")
-
-
-def get_team_list_ai(team_name: str = "",):
     pass

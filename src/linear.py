@@ -1,16 +1,20 @@
 import json
 import os
-import requests
-from requests.exceptions import HTTPError
-from dotenv import load_dotenv
 from typing import Dict, List, Union
+
+import requests
+from dotenv import load_dotenv
+from requests.exceptions import HTTPError
 
 load_dotenv()
 
-LINEAR_GRAPHQL_ENDPOINT = os.getenv('LINEAR_GRAPHQL_ENDPOINT') or ''
-LINEAR_HEADER_AUTH = os.getenv('LINEAR_HEADER_AUTH') or ''
+LINEAR_GRAPHQL_ENDPOINT = os.getenv("LINEAR_GRAPHQL_ENDPOINT") or ""
+LINEAR_HEADER_AUTH = os.getenv("LINEAR_HEADER_AUTH") or ""
 
-def make_linear_call(query: str) -> Dict[str,Dict[str, Dict[str, List[Dict[str, str]]]]]:
+
+def make_linear_call(
+    query: str,
+) -> Dict[str, Dict[str, Dict[str, List[Dict[str, str]]]]]:
     """
     Function to make a call to linear
     """
@@ -28,7 +32,8 @@ def make_linear_call(query: str) -> Dict[str,Dict[str, Dict[str, List[Dict[str, 
 
     return response.json()
 
-def get_team_list() -> List[Dict[str, Union[str , int]]]:
+
+def get_team_list() -> List[Dict[str, Union[str, int]]]:
     """
     Get a list of all teams on linear
     """
@@ -48,7 +53,8 @@ def get_team_list() -> List[Dict[str, Union[str , int]]]:
     teams_list = [{**value, "value": i} for i, value in enumerate(values_list)]
     return teams_list
 
-def get_project_list() -> List[Dict[str, Union[str , int]]]:
+
+def get_project_list() -> List[Dict[str, Union[str, int]]]:
     """
     Get a list of all projects on linear
     """
@@ -76,7 +82,8 @@ def get_project_list() -> List[Dict[str, Union[str , int]]]:
     project_list = [{**value, "value": i} for i, value in enumerate(values_list)]
     return project_list
 
-def get_label_list() -> List[Dict[str, Union[str , int]]]:
+
+def get_label_list() -> List[Dict[str, Union[str, int]]]:
     """
     Get a list of all labels on linear
     """
@@ -98,7 +105,8 @@ def get_label_list() -> List[Dict[str, Union[str , int]]]:
     label_list = [{**value, "value": i} for i, value in enumerate(values_list)]
     return label_list
 
-def get_user_list() -> List[Dict[str, Union[str , int]]]:
+
+def get_user_list() -> List[Dict[str, Union[str, int]]]:
     """
     Get a list of all users on linear
     """
@@ -118,6 +126,7 @@ def get_user_list() -> List[Dict[str, Union[str , int]]]:
     values_list = response["data"]["users"]["nodes"]
     users_list = [{**value, "value": i} for i, value in enumerate(values_list)]
     return users_list
+
 
 def get_project_issue_list(project_id: str) -> List[Dict[str, str]]:
     """
@@ -141,6 +150,7 @@ def get_project_issue_list(project_id: str) -> List[Dict[str, str]]:
     issues_list = response["data"]["issues"]["nodes"]
     return issues_list
 
+
 def get_user_issue_list(user_id: str) -> List[Dict[str, str]]:
     """
     Get a list of all issues for a user on linear
@@ -161,6 +171,7 @@ def get_user_issue_list(user_id: str) -> List[Dict[str, str]]:
     response = make_linear_call(issue_list_query)
     issues_list = response["data"]["issues"]["nodes"]
     return issues_list
+
 
 def get_issue_details(issue_id: str) -> List[Dict[str, str]]:
     """
@@ -193,6 +204,7 @@ def get_issue_details(issue_id: str) -> List[Dict[str, str]]:
     issue_details = response["data"]["issue"]["nodes"]
     return issue_details
 
+
 def check_and_extract_team(team_name: str) -> List[Dict[str, str]]:
     """
     Get a list of all teams on linear
@@ -218,6 +230,7 @@ def check_and_extract_team(team_name: str) -> List[Dict[str, str]]:
     if len(teams_list) > 1:
         raise ValueError("More than one team found with the given name")
     return teams_list
+
 
 def check_and_extract_project(project_name: str) -> List[Dict[str, str]]:
     """
@@ -253,6 +266,7 @@ def check_and_extract_project(project_name: str) -> List[Dict[str, str]]:
         raise ValueError("More than one project found with the given name")
     return project_list
 
+
 def check_and_extract_assignee(assignee_name: str) -> List[Dict[str, str]]:
     user_list_query = f"""
     query {{
@@ -276,12 +290,14 @@ def check_and_extract_assignee(assignee_name: str) -> List[Dict[str, str]]:
         raise ValueError("More than one user found with the given name")
     return users_list
 
+
 def check_and_extract_labels(labels: List[str]) -> List[List[Dict[str, str]]]:
     label_list: List[List[Dict[str, str]]] = []
     for label in labels:
         label_object = check_and_extract_label(label)
         label_list.append(label_object)
     return label_list
+
 
 def check_and_extract_label(label: str) -> List[Dict[str, str]]:
     label_list_query = f"""
@@ -305,6 +321,7 @@ def check_and_extract_label(label: str) -> List[Dict[str, str]]:
         raise ValueError(f"Label name {label} is invalid")
     return label_list
 
+
 def create_issue(
     title: str,
     description: str,
@@ -316,17 +333,27 @@ def create_issue(
     """
     Function to create an issue on linear
     """
-    
+
+    input_block = ""
+
+    if title:
+        input_block += f"""title: "{title}"\n"""
+    if description:
+        input_block += f"""description: "{description}"\n"""
+    if team_id:
+        input_block += f"""teamId: "{team_id}"\n"""
+    if project_id:
+        input_block += f"""projectId: "{project_id}"\n"""
+    if assignee_id:
+        input_block += f"""assigneeId: "{assignee_id}"\n"""
+    if label_ids:
+        input_block += f"""labelIds: {json.dumps(label_ids)}\n"""
+
     query = f"""
     mutation IssueCreate {{
     issueCreate(
         input: {{
-        title: "{title}"
-        description: "{description}"
-        teamId: "{team_id}"
-        projectId: "{project_id}"
-        assigneeId: "{assignee_id}"
-        labelIds: {json.dumps(label_ids)}
+        {input_block}
         }}
     ) {{
         success
@@ -338,6 +365,7 @@ def create_issue(
     }}
     """
     response = make_linear_call(query)
+    print(response)
     if response:
         return True
     else:
