@@ -1,9 +1,9 @@
 import json
 import os
 import requests
-from requests.exceptions import ConnectTimeout, HTTPError, ReadTimeout, Timeout, ConnectionError
+from requests.exceptions import HTTPError
 from dotenv import load_dotenv
-from typing import Dict, List
+from typing import Dict, List, Union
 
 load_dotenv()
 
@@ -28,8 +28,7 @@ def make_linear_call(query: str) -> Dict[str,Dict[str, Dict[str, List[Dict[str, 
 
     return response.json()
 
-
-def get_team_list() -> list or None:
+def get_team_list() -> List[Dict[str, Union[str , int]]]:
     """
     Get a list of all teams on linear
     """
@@ -45,15 +44,11 @@ def get_team_list() -> list or None:
         }
         """
     response = make_linear_call(team_list_query)
-    if response:
-        values_list = response["data"]["teams"]["nodes"]
-        teams_list = [{**value, "value": i} for i, value in enumerate(values_list)]
-        return teams_list
+    values_list = response["data"]["teams"]["nodes"]
+    teams_list = [{**value, "value": i} for i, value in enumerate(values_list)]
+    return teams_list
 
-    return None
-
-
-def get_project_list() -> list or None:
+def get_project_list() -> List[Dict[str, Union[str , int]]]:
     """
     Get a list of all projects on linear
     """
@@ -77,15 +72,11 @@ def get_project_list() -> list or None:
     """
 
     response = make_linear_call(project_list_query)
-    if response:
-        values_list = response["data"]["projects"]["nodes"]
-        project_list = [{**value, "value": i} for i, value in enumerate(values_list)]
-        return project_list
+    values_list = response["data"]["projects"]["nodes"]
+    project_list = [{**value, "value": i} for i, value in enumerate(values_list)]
+    return project_list
 
-    return None
-
-
-def get_label_list() -> list or None:
+def get_label_list() -> List[Dict[str, Union[str , int]]]:
     """
     Get a list of all labels on linear
     """
@@ -103,15 +94,11 @@ def get_label_list() -> list or None:
     """
 
     response = make_linear_call(label_list_query)
-    if response:
-        values_list = response["data"]["issueLabels"]["nodes"]
-        label_list = [{**value, "value": i} for i, value in enumerate(values_list)]
-        return label_list
+    values_list = response["data"]["issueLabels"]["nodes"]
+    label_list = [{**value, "value": i} for i, value in enumerate(values_list)]
+    return label_list
 
-    return None
-
-
-def get_user_list() -> list or None:
+def get_user_list() -> List[Dict[str, Union[str , int]]]:
     """
     Get a list of all users on linear
     """
@@ -128,15 +115,11 @@ def get_user_list() -> list or None:
     """
 
     response = make_linear_call(user_list_query)
-    if response:
-        values_list = response["data"]["users"]["nodes"]
-        users_list = [{**value, "value": i} for i, value in enumerate(values_list)]
-        return users_list
+    values_list = response["data"]["users"]["nodes"]
+    users_list = [{**value, "value": i} for i, value in enumerate(values_list)]
+    return users_list
 
-    return None
-
-
-def get_project_issue_list(self, project_id: str) -> list or None:
+def get_project_issue_list(project_id: str) -> List[Dict[str, str]]:
     """
     Get a list of all issues for a project on linear
     """
@@ -153,18 +136,12 @@ def get_project_issue_list(self, project_id: str) -> list or None:
     }}
     }}
     """
-    response = requests.post(
-        self.url, json={"query": issue_list_query}, headers=self.headers
-    )
-    if response.status_code == 200:
-        response_json = json.loads(response.text)
-        issues_list = response_json["data"]["issues"]["nodes"]
-        return issues_list
-    else:
-        return None
 
+    response = make_linear_call(issue_list_query)
+    issues_list = response["data"]["issues"]["nodes"]
+    return issues_list
 
-def get_user_issue_list(self, user_id: str) -> list or None:
+def get_user_issue_list(user_id: str) -> List[Dict[str, str]]:
     """
     Get a list of all issues for a user on linear
     """
@@ -181,18 +158,11 @@ def get_user_issue_list(self, user_id: str) -> list or None:
     }}
     }}
     """
-    response = requests.post(
-        self.url, json={"query": issue_list_query}, headers=self.headers
-    )
-    if response.status_code == 200:
-        response_json = json.loads(response.text)
-        issues_list = response_json["data"]["issues"]["nodes"]
-        return issues_list
-    else:
-        return None
+    response = make_linear_call(issue_list_query)
+    issues_list = response["data"]["issues"]["nodes"]
+    return issues_list
 
-
-def get_issue_details(self, issue_id: str) -> dict or None:
+def get_issue_details(issue_id: str) -> List[Dict[str, str]]:
     """
     Get the details of an issue on linear
     """
@@ -219,16 +189,121 @@ def get_issue_details(self, issue_id: str) -> dict or None:
     }}
     }}
     """
-    response = requests.post(
-        self.url, json={"query": issue_details_query}, headers=self.headers
-    )
-    if response.status_code == 200:
-        response_json = json.loads(response.text)
-        issue_details = response_json["data"]["issue"]
-        return issue_details
-    else:
-        return None
+    response = make_linear_call(issue_details_query)
+    issue_details = response["data"]["issue"]["nodes"]
+    return issue_details
 
+def check_and_extract_team(team_name: str) -> List[Dict[str, str]]:
+    """
+    Get a list of all teams on linear
+    """
+
+    team_list_query = f"""
+        query Teams {{
+        teams (filter: {{
+            name: {{ containsIgnoreCase: "{team_name}" }}
+        }}){{
+            nodes {{
+            id
+            name
+            }}
+        }}
+        }}
+        """
+    response = make_linear_call(team_list_query)
+
+    teams_list = response["data"]["teams"]["nodes"]
+    if len(teams_list) == 0:
+        raise ValueError("No team found with the given name")
+    if len(teams_list) > 1:
+        raise ValueError("More than one team found with the given name")
+    return teams_list
+
+def check_and_extract_project(project_name: str) -> List[Dict[str, str]]:
+    """
+    Get a list of all projects on linear
+    """
+
+    project_list_query = f"""
+    query Projects {{
+    projects(filter: {{
+      name: {{ containsIgnoreCase: "{project_name}" }}
+    }}) {{
+        nodes {{
+        id
+        name
+        state
+        teams{{
+                nodes {{
+                id
+                name
+                }}
+            }}
+        }}
+    }}
+    }}
+    """
+
+    response = make_linear_call(project_list_query)
+
+    project_list = response["data"]["projects"]["nodes"]
+    if len(project_list) == 0:
+        raise ValueError("No project found with the given name")
+    if len(project_list) > 1:
+        raise ValueError("More than one project found with the given name")
+    return project_list
+
+def check_and_extract_assignee(assignee_name: str) -> List[Dict[str, str]]:
+    user_list_query = f"""
+    query {{
+            users(filter: {{
+            name: {{ containsIgnoreCase: "{assignee_name}" }}
+          }}) {{
+            nodes {{
+            name
+            id
+            }}
+        }}
+    }}
+    """
+
+    response = make_linear_call(user_list_query)
+
+    users_list = response["data"]["users"]["nodes"]
+    if len(users_list) == 0:
+        raise ValueError("No user found with the given name")
+    if len(users_list) > 1:
+        raise ValueError("More than one user found with the given name")
+    return users_list
+
+def check_and_extract_labels(labels: List[str]) -> List[List[Dict[str, str]]]:
+    label_list: List[List[Dict[str, str]]] = []
+    for label in labels:
+        label_object = check_and_extract_label(label)
+        label_list.append(label_object)
+    return label_list
+
+def check_and_extract_label(label: str) -> List[Dict[str, str]]:
+    label_list_query = f"""
+    query issueLabels {{
+    issueLabels(filter: {{
+            name: {{ containsIgnoreCase: "{label}" }}
+          }}) {{
+        nodes {{
+        id
+        name
+        color
+        }}
+    }}
+    }}
+    """
+
+    response = make_linear_call(label_list_query)
+
+    label_list = response["data"]["issueLabels"]["nodes"]
+    if len(label_list) == 0:
+        raise ValueError(f"Label name {label} is invalid")
+    return label_list
 
 def create_issue(
     title: str,
@@ -236,8 +311,8 @@ def create_issue(
     team_id: str,
     project_id: str,
     assignee_id: str,
-    label_ids,
-) -> None:
+    label_ids: List[str],
+) -> bool:
     """
     Function to create an issue on linear
     """
@@ -263,8 +338,6 @@ def create_issue(
     }}
     """
     response = make_linear_call(query)
-    # print("issue create")
-    # print(response)
     if response:
         return True
     else:

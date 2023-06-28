@@ -1,8 +1,12 @@
 import typer
-from PyInquirer import Separator, prompt
+# from PyInquirer import Separator, prompt
 from rich import print as rprint
+from typing import Dict, List
+import json
+from gpt import ask_question, setup_ai_system
+from linear_ai import create_issue_ai, get_team_list_ai
 
-from src.linear import (
+from linear import (
     create_issue,
     get_label_list,
     get_project_list,
@@ -187,6 +191,39 @@ def create_issue_interface():
             rprint("[red bold]Error while creating the issue [red bold]")
     else:
         rprint("[red bold]Issue creation cancelled. [red bold]")
+
+@app.command("create-issue-ai")
+def create_issue_ai_interface():
+    running = 1
+    message_history: List[Dict[str, str]] = []
+    setup_ai_system(message_history)
+    user_message = input("What would you like to do on linear : ")
+
+    while running:
+        try:
+            assistant_msg = ask_question(message_history, user_message)
+
+            if "function_call" in assistant_msg:
+                function_name = assistant_msg["function_call"]["name"]
+                function_args = assistant_msg["function_call"]["arguments"]
+
+                if function_name == "create_issue":
+                    create_issue_ai(**json.loads(function_args))
+                elif function_name == "get_team_list":
+                    get_team_list_ai(**json.loads(function_args))
+
+                running = 0
+            else:
+                # gpt couldn't come up with a function call and needs more input
+                print(f"\n {assistant_msg['content']}")
+                input_message = input("Enter a message: ")
+                user_message = f"Use '{input_message}' to correct the previous error and create the issue"
+        except Exception as e:
+            print("There was an error while calling function")
+            # print(e)
+            user_message = (
+                f"""Encountered an error during creating issue. Error is {e}"""
+            )
 
 
 if __name__ == "__main__":
