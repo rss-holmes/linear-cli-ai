@@ -1,7 +1,7 @@
 from typing import Any, Dict, List
 import requests
-from function_schema import functions
-from constants import GPT_MODEL, OPENAI_API_KEY
+from src.function_schema import functions
+from src.constants import GPT_MODEL, OPENAI_API_KEY
 
 def chat_completion_request(
     messages: List[Dict["str", "str"]],

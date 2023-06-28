@@ -3,7 +3,7 @@ from typing import Dict, List, Union
 
 import requests
 from requests.exceptions import HTTPError
-from constants import LINEAR_GRAPHQL_ENDPOINT, LINEAR_TOKEN
+from src.constants import LINEAR_GRAPHQL_ENDPOINT, LINEAR_TOKEN
 
 
 def make_linear_call(

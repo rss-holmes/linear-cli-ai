@@ -1,6 +1,6 @@
 from typing import List, Set
 
-from linear import (
+from src.linear import (
     check_and_extract_assignee,
     check_and_extract_labels,
     check_and_extract_project,

@@ -5,16 +5,16 @@ import typer
 from PyInquirer import prompt  # type: ignore
 from rich import print as rprint
 
-from configure import configure_system
-from gpt import ask_question, setup_ai_system
-from linear import (
+from src.configure import configure_system
+from src.gpt import ask_question, setup_ai_system
+from src.linear import (
     create_issue,
     get_label_list,
     get_project_list,
     get_team_list,
     get_user_list,
 )
-from linear_ai import create_issue_ai, get_team_list_ai
+from src.linear_ai import create_issue_ai, get_team_list_ai
 
 app = typer.Typer()
 
@@ -187,5 +187,6 @@ def create_issue_ai_interface():
             )
 
 
-if __name__ == "__main__":
-    app()
+# if __name__ == "__main__":
+
+#     app()
