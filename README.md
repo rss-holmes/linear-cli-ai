@@ -43,7 +43,7 @@ You can do this in several ways:
 -  Environment variables
 -  Config file
 
-The quickest way to get started is to run the ``linear-cli-ai configure`` command:
+The quickest way to get started is to run the ``linear configure`` command:
 
 ```
 $ linear configure
