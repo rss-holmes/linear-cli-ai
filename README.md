@@ -13,7 +13,7 @@ The safest way to install globally is to use
 
 ```
 
-   $ python -m pip install awscli
+   $ python -m pip install linear-cli-ai
 
 ```
 
@@ -21,7 +21,7 @@ or for your user:
 
 ```
 
-   $ python -m pip install --user awscli
+   $ python -m pip install --user linear-cli-ai
 
 ```
 
@@ -30,7 +30,7 @@ latest version, you can run:
 
 ```
 
-   $ python -m pip install --upgrade awscli
+   $ python -m pip install --upgrade linear-cli-ai
 
 ```
 
@@ -67,6 +67,7 @@ To use environment variables, do the following:
 To use a config file, create an INI formatted file like this:
 
 ```
+
   [linear]
   token = <linear_token>
   
@@ -84,23 +85,20 @@ To view help documentation type :
 
 ```
 $ linear-cli-ai help
-
 ```
 
 To use ai to perform actions on linear:
 
 ```
 $ linear-cli-ai ai
-
 ```
 
 To create an issue via options on linear :
 
 ```
 $ linear-cli-ai create-issue
-
 ```
-## Sample command for creating issue using ai
+### Sample ai prompt for creating an issue on linear
 Create an issue with description 'Rewrite the print service with queue system'
 and title as 'Print Service v2.0' and team as 'engineering' and assign it to 'Rohan'
 and add labels 'bug' and 'high priority' and add it to project 'Print Service'
