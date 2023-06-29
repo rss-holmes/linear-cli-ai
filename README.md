@@ -37,7 +37,13 @@ latest version, you can run:
 
 # Configuration
 
-Before using linear-cli-ai, you need to configure a few keys.
+You will need a linear-api-key and an openai-api-key (if you are using the ai interface) 
+
+You can generate these keys by going to the following links
+* [Generate Linear api key](https://linear.app/tranzact/settings/api)
+* [Generate Openai api key](https://platform.openai.com/account/api-keys)
+
+Before using linear-cli-ai, you need to configure a few settings.
 You can do this in several ways:
 
 -  Configuration command
