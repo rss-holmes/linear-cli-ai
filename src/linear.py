@@ -323,7 +323,7 @@ def create_issue(
     project_id: str,
     assignee_id: str,
     label_ids: List[str],
-) -> bool:
+) -> str:
     """
     Function to create an issue on linear
     """
@@ -359,8 +359,10 @@ def create_issue(
     }}
     """
     response = make_linear_call(query)
-    print(response)
-    if response:
-        return True
-    else:
-        return False
+
+    if response.get('errors', None):
+        error = response.get('errors')
+        raise ValueError(error[0]['extensions']['userPresentableMessage'])
+
+    print('Issue Created successfully !')
+    

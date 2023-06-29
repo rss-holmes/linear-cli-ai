@@ -1,9 +1,11 @@
 import json
+import time
 from typing import Dict, List, cast
 
 import typer
 from PyInquirer import prompt  # type: ignore
 from rich import print as rprint
+from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from src.configure import configure_system
 from src.gpt import ask_question, setup_ai_system
@@ -169,11 +171,30 @@ def create_issue_ai_interface():
                 function_args = assistant_msg["function_call"]["arguments"]
 
                 if function_name == "create_issue":
-                    create_issue_ai(**json.loads(function_args))
+                    processed_data = create_issue_ai(**json.loads(function_args))
+                    
+                    print(processed_data["message"])
+
+                    issue_confirmation_list = [
+                        {
+                            "type": "confirm",
+                            "name": "confirmation",
+                            "message": "Confirm that the data is correct : ",
+                        },
+                    ]
+
+                    confirmation_data = prompt(issue_confirmation_list)
+
+                    if confirmation_data["confirmation"]:
+                        create_issue(**processed_data["data"])
+                    else:
+                        rprint("[red bold]Issue creation cancelled. [red bold]")
+
                 elif function_name == "get_team_list":
                     get_team_list_ai(**json.loads(function_args))
 
                 running = 0
+
             else:
                 # gpt couldn't come up with a function call and needs more input
                 print(f"\n {assistant_msg['content']}")
@@ -185,6 +206,7 @@ def create_issue_ai_interface():
             user_message = (
                 f"""Encountered an error during creating issue. Error is {e}"""
             )
+            
 
 
 # if __name__ == "__main__":

@@ -1,4 +1,4 @@
-# linear-cli
+# linear-cli-ai
 An AI based CLI for the linear app
 
 # Installation
@@ -80,7 +80,7 @@ and place it in ``~/.linear-cli-ai.ini`` (or in ``%UserProfile%\.linear-cli-ai.i
 
 # Sample Usage
 
-linear-cli-api is available in the commandline with the command ``linear``
+linear-cli-ai is available in the commandline with the command ``linear``
 
 To view help documentation type :
 

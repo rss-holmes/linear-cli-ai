@@ -50,13 +50,14 @@ def create_issue_ai(
 
     label_objects = []
     label_ids: Set[str] = set()
+    label_names: Set[str] = set()
     if labels:
         label_objects = check_and_extract_labels(labels)
-        print(label_objects)
-        label_ids: Set[str] = set()
+        # print(label_objects)
         for label_lists in label_objects:
             for label in label_lists:
                 label_ids.add(label["id"])
+                label_names.add(label["name"])
 
     final_message = "Creating issue with the given inputs: \n"
 
@@ -71,11 +72,21 @@ def create_issue_ai(
     if assignee_object:
         final_message += f"""assigneeId: "{assignee_object[0]['name']}"\n"""
     if label_ids:
-        final_message += f"""labelIds: {[label_object[0]['name'] for label_object in label_objects]}\n"""
+        final_message += f"""labelIds: {list(label_names)}\n"""
 
-    print(final_message)
+    return_dict = {
+        "message": final_message,
+        "data": {
+            "title": title,
+            "description": description,
+            "team_id": team_id,
+            "project_id": project_id,
+            "assignee_id": assignee_id,
+            "label_ids": list(label_ids),
+        },
+    }
 
-    create_issue(title, description, team_id, project_id, assignee_id, list(label_ids))
+    return return_dict
 
 
 def get_team_list_ai(

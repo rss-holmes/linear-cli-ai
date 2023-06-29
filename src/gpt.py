@@ -1,7 +1,10 @@
 from typing import Any, Dict, List
+
 import requests
-from src.function_schema import functions
+
 from src.constants import GPT_MODEL, OPENAI_API_KEY
+from src.function_schema import functions
+
 
 def chat_completion_request(
     messages: List[Dict["str", "str"]],
@@ -27,10 +30,13 @@ def chat_completion_request(
     except Exception as err:
         raise ValueError("Unable to generate ChatCompletion response") from err
 
+
 def setup_ai_system(message_history: List[Dict[str, str]]) -> None:
     system_message = """Don't make assumptions about what values to plug into functions. 
-                        Ask for clarification if a user request is ambiguous."""
+                        Ask for clarification if a user request is ambiguous.
+                        If you encounter an error, ask the user for clarification."""
     message_history.append({"role": "system", "content": system_message})
+
 
 def ask_question(
     message_history: List[Dict["str", "str"]], user_message: str = ""
@@ -44,4 +50,3 @@ def ask_question(
     message_history.append(assistant_message)
 
     return assistant_message
-
