@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "linear-cli-ai"
-version = "0.1.4"
-description = "A simple cli for interacting with linear"
+version = "0.1.5"
+description = "An ai based cli for interacting with linear.Use the power of AI to interface with your issue tracking system in natural language right from your terminal"
 authors = ["scar3crow <rss.holmes@gmail.com>"]
 readme = "README.md"
 packages = [{include = "src"}]

@@ -1,5 +1,6 @@
 # linear-cli-ai
 An AI based CLI for the linear app
+Use the power of AI to interface with your issue tracking system in natural language right from your terminal
 
 # Installation
 
